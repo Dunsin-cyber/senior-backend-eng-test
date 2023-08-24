@@ -1,0 +1,29 @@
+version: '3'
+services:
+  server:
+    build: .
+    ports:
+      - 80:3001
+    environment:
+      - PORT=3001
+    depends_on:
+      - db
+    volumes:
+      # - ./:/app:ro
+      - ./:/app
+      - /app/node_modules
+    command: yarn start:dev
+  db:
+    image: postgres
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env
+    # environment:
+    #   POSTGRES_PASSWORD: 123456
+    #   POSTGRES_USER: Dunsin
+    #   POSTGRES_DB: test_db
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:

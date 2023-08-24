@@ -1,0 +1,42 @@
+{
+  "name": "senior-backend-engineer-test",
+  "version": "1.0.0",
+  "description": "this is a test for the position of a senior backend developer at rise",
+  "main": "./src/index.ts",
+  "scripts": {
+    "start:dev": "yarn dev",
+    "dev": "nodemon --legacy-watch src/index.ts"
+  },
+  "keywords": [
+    "node",
+    "postgres",
+    "docker",
+    "redis"
+  ],
+  "author": "Oluwadunsin Abisuwa",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^20.5.3",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "dotenv-safe": "^8.2.0",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.1",
+    "paths": "^0.1.1",
+    "pg": "^8.11.3",
+    "prettier": "^3.0.2",
+    "tsconfig-paths": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/dotenv-safe": "^8.1.2",
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/pg": "^8.10.2",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
