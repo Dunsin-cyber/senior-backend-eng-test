@@ -15,31 +15,7 @@ Follow these steps to set up and run the project on your local machine.
 DB_PASSWORD=your_db_password
 DB_NAME=your_db_name`
 
-4. Build and start the project using Docker Compose: `docker-compose -f docker-compose.yml up --build`
-
-vbnet
-Copy code
-
-This command will set up the project, including the Node.js app and PostgreSQL database.
-
-5. Access the app in your browser:
-
-Open your browser and navigate to the URL and port you specified in the Docker Compose file.
-
-## Contributing
-
-If you'd like to contribute to this project, feel free to fork the repository and submit a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-Replace placeholders like your_db_username, your_db_password, your_db_name, URL, and port with your actual values.
-
-This README structure provides clear sections for the project's purpose, how to set it up, how to contribute, and licensing information. It's well-organized and easy to follow for anyone who wants to work with your project.
-
-4. Build and start the project using Docker Compose:
-
-This command will set up the project; the Node.js app and PostgreSQL database.
+4. Build and start the project using Docker Compose: `docker-compose -f docker-compose.yml up --build` This command will set up the project, including the Node.js app and PostgreSQL database.
 
 5. Access the app in your browser:
 
