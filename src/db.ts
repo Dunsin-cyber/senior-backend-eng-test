@@ -1,12 +1,13 @@
-import { Client } from 'pg';
+import { Pool } from 'pg';
 import { v4 as uuidv4 } from 'uuid';
 import {
   POSTGRES_DB,
   POSTGRES_PASSWORD,
   POSTGRES_USER,
 } from './constants/index';
+import { AppError } from './middleware/error';
 
-const db = new Client({
+const db = new Pool({
   user: POSTGRES_USER,
   host: 'localhost',
   database: POSTGRES_DB,
@@ -45,8 +46,7 @@ async function createTables() {
     console.log('Tables created successfully');
   } catch (error) {
     console.error('Error creating tables:', error);
-  } finally {
-    db.end();
+    new AppError('Error creating tables:', 500);
   }
 }
 
@@ -62,6 +62,7 @@ const checkDBConnection = () => {
         'Error connecting to the database: retrying in 5 seconds.....',
         error
       );
+
       setTimeout(checkDBConnection, 5000);
     });
 };

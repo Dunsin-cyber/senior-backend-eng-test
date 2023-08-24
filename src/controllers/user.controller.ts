@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { STATUS_CODE } from '../constants/index';
-import { handleCreateUser } from '../functions/user';
+import {
+  handleCreateUser,
+  handleGetAUser,
+  handleGetAllUsers,
+} from '../functions/user';
 const controller = {
   create: async (req: Request, res: Response) => {
     //Valldates data coming in
@@ -14,18 +18,35 @@ const controller = {
       return;
     }
     const { username, email } = req.body;
-    // const data = await handleCreateUser(username, email);
+    const data = await handleCreateUser(username, email);
 
-    // if (data) {
-    //   res.status(STATUS_CODE.OK).json({
-    //     success: true,
-    //     data,
-    //   });
-    // }
-    res.send('create works');
+    if (data) {
+      res.status(STATUS_CODE.OK).json({
+        success: true,
+        data,
+      });
+    }
   },
-  getAll: async (req: Request, res: Response) => {
-    res.send('get all works');
+  getAUser: async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const data = await handleGetAUser(id);
+
+    if (data) {
+      res.status(STATUS_CODE.OK).json({
+        success: true,
+        data,
+      });
+    }
+  },
+  getAllUsers: async (req: Request, res: Response) => {
+    const data = await handleGetAllUsers();
+
+    if (data) {
+      res.status(STATUS_CODE.OK).json({
+        success: true,
+        data,
+      });
+    }
   },
   createUserPost: async (req: Request, res: Response) => {
     res.send('createUserPost works');
