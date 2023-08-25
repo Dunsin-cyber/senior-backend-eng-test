@@ -18,7 +18,6 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 
 //Global error hander
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.log(err);
   const statusCode = err?.statusCode || 500;
 
   res.status(statusCode).json({

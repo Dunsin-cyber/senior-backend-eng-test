@@ -28,3 +28,12 @@ If you'd like to contribute to this project, feel free to fork the repository an
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Todo
+
+1. write querys for post creation and comment
+2. middleware validation
+3. write test code
+4. Query Optimization Task:
+5. add postman and live url to the readme
+6. deploy and submit application

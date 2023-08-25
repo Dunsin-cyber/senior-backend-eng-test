@@ -5,21 +5,42 @@ import {
   handleCreateUser,
   handleGetAUser,
   handleGetAllUsers,
-} from '../functions/user';
+  handleCreatePost,
+  handleLogIn,
+} from '../functions/index';
 const controller = {
   create: async (req: Request, res: Response) => {
     //Valldates data coming in
     const err = validationResult(req);
     if (!err.isEmpty()) {
       res.status(STATUS_CODE.BAD_REQUEST).json({
-        status: false,
+        success: false,
         data: err.array(),
       });
       return;
     }
-    const { username, email } = req.body;
-    const data = await handleCreateUser(username, email);
+    const { username, email, password } = req.body;
+    const data = await handleCreateUser(username, email, password);
 
+    if (data) {
+      res.status(STATUS_CODE.OK).json({
+        success: true,
+        data,
+      });
+    }
+  },
+  logIn: async (req: Request, res: Response) => {
+    //Valldates data coming in
+    const err = validationResult(req);
+    if (!err.isEmpty()) {
+      res.status(STATUS_CODE.BAD_REQUEST).json({
+        success: false,
+        data: err.array(),
+      });
+      return;
+    }
+    const { email, password } = req.body;
+    const data = await handleLogIn(email, password);
     if (data) {
       res.status(STATUS_CODE.OK).json({
         success: true,
@@ -29,12 +50,13 @@ const controller = {
   },
   getAUser: async (req: Request, res: Response) => {
     const { id } = req.params;
-    const data = await handleGetAUser(id);
+    const data = await handleGetAUser(id, null);
 
     if (data) {
+      const { password, ...data_ } = data;
       res.status(STATUS_CODE.OK).json({
         success: true,
-        data,
+        data: data_,
       });
     }
   },
@@ -49,7 +71,25 @@ const controller = {
     }
   },
   createUserPost: async (req: Request, res: Response) => {
-    res.send('createUserPost works');
+    //Valldates data coming in
+    const err = validationResult(req);
+    if (!err.isEmpty()) {
+      res.status(STATUS_CODE.BAD_REQUEST).json({
+        success: false,
+        data: err.array(),
+      });
+      return;
+    }
+    const { title, content } = req.body;
+    const user_id = (req as any).user.user_id;
+    const data = await handleCreatePost(title, content, user_id);
+
+    // if (data) {
+    //   res.status(STATUS_CODE.OK).json({
+    //     success: true,
+    //     data,
+    //   });
+    // }
   },
   getUserPost: async (req: Request, res: Response) => {
     res.send('get user post works');

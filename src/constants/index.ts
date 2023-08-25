@@ -1,6 +1,6 @@
 import dotenv from 'dotenv-safe';
 dotenv.config();
-import { Secret, GetPublicKeyOrSecret } from 'jsonwebtoken';
+import { Secret } from 'jsonwebtoken';
 
 export const PORT = process.env.PORT || 3000;
 // STATUS CODE
