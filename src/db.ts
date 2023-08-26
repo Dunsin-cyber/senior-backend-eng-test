@@ -9,7 +9,7 @@ import { AppError } from './middleware/error';
 
 const db = new Pool({
   user: POSTGRES_USER,
-  host: 'senior-backend-eng-test-db-1',
+  host: 'senior-backend-eng-test_db_1',
   database: POSTGRES_DB,
   password: POSTGRES_PASSWORD,
   port: 5432, // Default PostglsreSQL port
