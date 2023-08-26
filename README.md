@@ -21,6 +21,10 @@ DB_NAME=your_db_name`
 
 Open your browser and navigate to the URL and port you specified in the Docker Compose file.
 
+## Testing
+
+Ensure database used for testing is a testing database. After confirming thim then feel free to run the test command `yarn test`
+
 ## DOCS
 
 - [POSTMAN DOCS](https://documenter.getpostman.com/view/12099147/2s9Y5YS2gb)
