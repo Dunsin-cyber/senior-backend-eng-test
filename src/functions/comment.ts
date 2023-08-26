@@ -1,8 +1,14 @@
 import db from '../db';
-import { v4 as uuidv4 } from 'uuid';
-import { AppError } from '../middleware/error';
-import { SALT_ROUND, STATUS_CODE, JWT_SECRET } from '../constants/index';
+import { handleGetAUser, handleGetAPost } from '.';
+import { createCommentQ } from '../queries';
 
-export const handleCreateComment = async () => {};
-
-export const handleGetComments = async () => {};
+export const handleCreateComment = async (
+  user_id: string,
+  post_id: string,
+  content: string
+) => {
+  await handleGetAUser(user_id, null);
+  await handleGetAPost(post_id);
+  const create = await db.query(createCommentQ, [post_id, user_id, content]);
+  return create.rows;
+};

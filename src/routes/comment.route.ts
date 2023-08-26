@@ -14,11 +14,5 @@ router.post(
   validateCreateComment,
   handleError(controller.addComment)
 );
-router.get(
-  '/:postId/comments',
-  middleware.verifyBearer,
-  validateGetComment,
-  handleError(controller.getComment)
-);
 
 export default router;

@@ -5,6 +5,7 @@ import {
   getAllUsersQ,
   createPostQ,
   getUsersPostWithComment,
+  getAPostQ,
 } from '../queries';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
@@ -156,6 +157,14 @@ export const handleCreatePost = async (
 export const handleGetPosts = async (user_id: string) => {
   await handleGetAUser(user_id, null);
   const posts = await db.query(getUsersPostWithComment, [user_id]);
-  console.log(posts.rows);
   return posts.rows;
+};
+
+export const handleGetAPost = async (post_id: string) => {
+  const post = await db.query(getAPostQ, [post_id]);
+  if (post.rows.length === 0) {
+    throw new AppError('post does not exist', STATUS_CODE.BAD_REQUEST);
+  } else {
+    return post;
+  }
 };

@@ -40,6 +40,10 @@ LEFT JOIN (
 ) c ON p.post_id = c.post_id
 WHERE p.user_id = $1;
 `;
+
+const getAPostQ = `
+SELECT * FROM posts WHERE post_id = $1;
+`;
 export {
   getUserQuery,
   createUserQ,
@@ -47,4 +51,5 @@ export {
   createPostQ,
   createCommentQ,
   getUsersPostWithComment,
+  getAPostQ,
 };
