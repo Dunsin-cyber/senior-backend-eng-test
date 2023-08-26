@@ -10,7 +10,7 @@ import {
 
 router.post(
   '/:postId/comments',
-  middleware.verifyBearer,
+  handleError(middleware.verifyBearer),
   validateCreateComment,
   handleError(controller.addComment)
 );

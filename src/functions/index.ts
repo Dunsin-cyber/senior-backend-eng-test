@@ -7,6 +7,7 @@ import {
   getUsersPostWithComment,
   getAPostQ,
   getPostComments,
+  optimizer,
 } from '../queries';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
@@ -179,4 +180,10 @@ export const handleGetAPost = async (post_id: string) => {
     };
     return postWithComments;
   }
+};
+
+export const handleOptimize = async () => {
+  const res = await db.query(optimizer);
+
+  return res.rows;
 };

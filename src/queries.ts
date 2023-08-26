@@ -58,6 +58,34 @@ const getPostComments = `
 SELECT * FROM Comments
 WHERE post_id = $1;
 `;
+
+const optimizer = `
+WITH RankedPosts AS (
+  SELECT
+    p.*,
+    c.content AS comment_content,
+    ROW_NUMBER() OVER (PARTITION BY p.user_id ORDER BY c.created_at DESC) AS comment_rank
+  FROM Posts p
+  LEFT JOIN Comments c ON p.post_id = c.post_id
+),
+UserPostCounts AS (
+  SELECT
+    u.user_id,
+    u.username,
+    COUNT(p.post_id) AS post_count
+  FROM Users u
+  LEFT JOIN Posts p ON u.user_id = p.user_id
+  GROUP BY u.user_id, u.username
+)
+SELECT
+  upc.user_id,
+  upc.username,
+  rp.title AS post_title,
+  rp.comment_content AS latest_comment
+FROM UserPostCounts upc
+JOIN RankedPosts rp ON upc.user_id = rp.user_id AND rp.comment_rank = 1
+ORDER BY upc.post_count DESC
+LIMIT 3;`;
 export {
   getUserQuery,
   createUserQ,
@@ -67,4 +95,5 @@ export {
   getUsersPostWithComment,
   getAPostQ,
   getPostComments,
+  optimizer,
 };

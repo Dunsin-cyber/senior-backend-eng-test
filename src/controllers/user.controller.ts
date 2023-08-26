@@ -114,6 +114,9 @@ const controller = {
       });
     }
   },
+  optimize: async (req: Request, res: Response) => {
+    res.send('optimizer');
+  },
 };
 
 export default controller;
