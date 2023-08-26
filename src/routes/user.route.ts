@@ -5,6 +5,7 @@ import {
   validateUserData,
   validatePostData,
   validateLoginData,
+  validateGetData,
 } from '../middleware/validator';
 import { handleError } from '../middleware/error';
 import middleware from '../middleware';
@@ -23,6 +24,7 @@ router.post(
 );
 router.get(
   '/:id/posts',
+  validateGetData,
   middleware.verifyBearer,
   handleError(controller.getUserPost)
 );

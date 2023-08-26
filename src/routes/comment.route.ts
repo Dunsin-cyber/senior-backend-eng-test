@@ -1,8 +1,24 @@
 import { Router } from 'express';
 const router = Router();
 import controller from '../controllers/comment.controller';
-// import middleware from '../middleware/index'
+import middleware from '../middleware/index';
+import { handleError } from '../middleware/error';
+import {
+  validateCreateComment,
+  validateGetComment,
+} from '../middleware/validator';
 
-router.post('/', controller.addComment);
+router.post(
+  '/:postId/comments',
+  middleware.verifyBearer,
+  validateCreateComment,
+  handleError(controller.addComment)
+);
+router.get(
+  '/:postId/comments',
+  middleware.verifyBearer,
+  validateGetComment,
+  handleError(controller.getComment)
+);
 
 export default router;

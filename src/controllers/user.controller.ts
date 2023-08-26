@@ -7,7 +7,9 @@ import {
   handleGetAllUsers,
   handleCreatePost,
   handleLogIn,
+  handleGetPosts,
 } from '../functions/index';
+
 const controller = {
   create: async (req: Request, res: Response) => {
     //Valldates data coming in
@@ -81,18 +83,36 @@ const controller = {
       return;
     }
     const { title, content } = req.body;
-    const user_id = (req as any).user.user_id;
-    const data = await handleCreatePost(title, content, user_id);
+    const { id } = req.params;
+    const data = await handleCreatePost(title, content, id);
 
-    // if (data) {
-    //   res.status(STATUS_CODE.OK).json({
-    //     success: true,
-    //     data,
-    //   });
-    // }
+    if (data) {
+      res.status(STATUS_CODE.OK).json({
+        success: true,
+        data,
+      });
+    }
   },
   getUserPost: async (req: Request, res: Response) => {
-    res.send('get user post works');
+    //Valldates data coming in
+    const err = validationResult(req);
+    if (!err.isEmpty()) {
+      res.status(STATUS_CODE.BAD_REQUEST).json({
+        success: false,
+        data: err.array(),
+      });
+      return;
+    }
+
+    const { id } = req.params;
+    const data = await handleGetPosts(id);
+
+    if (data) {
+      res.status(STATUS_CODE.OK).json({
+        success: true,
+        data,
+      });
+    }
   },
 };
 

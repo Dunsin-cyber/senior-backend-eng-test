@@ -1,5 +1,11 @@
 import db from '../db';
-import { getUserQuery, createUserQ, getAllUsersQ } from '../queries';
+import {
+  getUserQuery,
+  createUserQ,
+  getAllUsersQ,
+  createPostQ,
+  getUsersPostWithComment,
+} from '../queries';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -137,8 +143,19 @@ export const handleGetAllUsers = async () => {
   return users;
 };
 
-export const handleCreatePost = (
+export const handleCreatePost = async (
   title: string,
   content: string,
   user_id: string
-) => {};
+) => {
+  await handleGetAUser(user_id, null);
+  const create = await db.query(createPostQ, [user_id, title, content]);
+  return create.rows;
+};
+
+export const handleGetPosts = async (user_id: string) => {
+  await handleGetAUser(user_id, null);
+  const posts = await db.query(getUsersPostWithComment, [user_id]);
+  console.log(posts.rows);
+  return posts.rows;
+};
