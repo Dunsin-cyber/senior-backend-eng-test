@@ -6,6 +6,7 @@ import {
   createPostQ,
   getUsersPostWithComment,
   getAPostQ,
+  getPostComments,
 } from '../queries';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
@@ -23,6 +24,8 @@ type PostT = {
 
 type CommentType = {
   comment_id: string;
+  user_id: string;
+  post_id: string;
   content: string;
   created_at: string;
 };
@@ -36,7 +39,11 @@ export type UserReturnType = {
   posts?: PostT[];
 };
 
-//get user by email or userID
+type PostReturnT = {
+  post: PostT;
+  comments: CommentType[];
+};
+
 export const handleGetAUser = async (
   userId: string | null,
   email: string | null
@@ -55,28 +62,10 @@ export const handleGetAUser = async (
       password: user.password,
       posts: [],
     };
-
-    // Organize posts and comments under the user object
-    result.rows.forEach((row) => {
-      if (row.post_id) {
-        const post: PostT = {
-          post_id: row.post_id,
-          title: row.post_title,
-          content: row.post_content,
-          comments: [],
-          created_at: row.created_at,
-        };
-        if (row.comment_id) {
-          post.comments.push({
-            comment_id: row.comment_id,
-            content: row.comment_content,
-            created_at: row.created_at,
-          });
-        }
-        userWithPostsAndComments.posts?.push(post);
-      }
-    });
-
+    // console.log(result.rows);
+    // It returns this same user nwith different product,
+    // so what i will do is the first array, i will use it to pick the user,
+    //then  ater on map throught the array to get the product
     return userWithPostsAndComments;
   }
 };
@@ -151,6 +140,11 @@ export const handleGetAllUsers = async () => {
   return users;
 };
 
+//--------------POSTS--------------------------
+//---------------------------------------------
+//---------------------------------------------
+//--------------POSTS--------------------------
+
 export const handleCreatePost = async (
   title: string,
   content: string,
@@ -164,7 +158,12 @@ export const handleCreatePost = async (
 export const handleGetPosts = async (user_id: string) => {
   await handleGetAUser(user_id, null);
   const posts = await db.query(getUsersPostWithComment, [user_id]);
-  return posts.rows;
+
+  const getAll = async () => {
+    return Promise.all(posts.rows.map((c) => handleGetAPost(c.post_id)));
+  };
+
+  return getAll();
 };
 
 export const handleGetAPost = async (post_id: string) => {
@@ -172,6 +171,12 @@ export const handleGetAPost = async (post_id: string) => {
   if (post.rows.length === 0) {
     throw new AppError('post does not exist', STATUS_CODE.BAD_REQUEST);
   } else {
-    return post;
+    const comments = await db.query(getPostComments, [post_id]);
+
+    const postWithComments: PostReturnT = {
+      post: post.rows[0],
+      comments: comments.rows,
+    };
+    return postWithComments;
   }
 };

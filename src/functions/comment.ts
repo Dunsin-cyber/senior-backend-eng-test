@@ -12,3 +12,8 @@ export const handleCreateComment = async (
   const create = await db.query(createCommentQ, [post_id, user_id, content]);
   return create.rows;
 };
+
+//FOR POST
+//find a post
+//getPostComments
+//find all comment that has post id = that post and then send it

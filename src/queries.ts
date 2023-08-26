@@ -17,14 +17,24 @@ SELECT  users.user_id, users.username, users.email, users.created_at FROM users
 `;
 
 const createPostQ = `
-INSERT INTO Posts (user_id, title, content)
-VALUES ($1, $2, $3)
-RETURNING post_id, user_id, title, content`;
+WITH inserted AS (
+  INSERT INTO Posts (user_id, title, content)
+  VALUES ($1, $2, $3)
+  RETURNING post_id, user_id, title, content, created_at
+)
+SELECT 
+  inserted.*, 
+  Users.username, 
+  Users.email, 
+  Users.created_at AS user_created_at
+FROM inserted
+JOIN Users ON inserted.user_id = Users.user_id;
+`;
 
 const createCommentQ = `
 INSERT INTO Comments (post_id, user_id, content)
 VALUES ($1, $2, $3)
-RETURNING comment_id, post_id, user_id, content
+RETURNING comment_id, post_id, user_id, content, created_at
 `;
 
 const getUsersPostWithComment = `
@@ -44,6 +54,10 @@ WHERE p.user_id = $1;
 const getAPostQ = `
 SELECT * FROM posts WHERE post_id = $1;
 `;
+const getPostComments = `
+SELECT * FROM Comments
+WHERE post_id = $1;
+`;
 export {
   getUserQuery,
   createUserQ,
@@ -52,4 +66,5 @@ export {
   createCommentQ,
   getUsersPostWithComment,
   getAPostQ,
+  getPostComments,
 };
