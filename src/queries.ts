@@ -1,28 +1,28 @@
 const getUserQuery = `
-SELECT users.user_id, users.password, users.username, users.email,
-       posts.post_id, posts.title as post_title, posts.content as post_content,
-       comments.comment_id, comments.content as comment_content
-FROM users
-LEFT JOIN posts ON users.user_id = posts.user_id
-LEFT JOIN comments ON posts.post_id = comments.post_id
-WHERE users.user_id = $1 OR users.email = $2;
+SELECT u.user_id, u.password, u.username, u.email,
+       p.post_id, p.title as post_title, p.content as post_content,
+       c.comment_id, c.content as comment_content, c.created_at as comment_created_at
+FROM Users u
+LEFT JOIN Posts p ON u.user_id = p.user_id
+LEFT JOIN Comments c ON p.post_id = c.post_id AND c.user_id = u.user_id
+WHERE u.user_id = $1 OR u.email = $2;
 `;
 const createUserQ = `
-INSERT INTO users (user_id, password, username, email)
+INSERT INTO Users (user_id, password, username, email)
 VALUES ($1, $2, $3, $4);
 `;
 
 const getAllUsersQ = `
-SELECT  users.user_id, users.username, users.email FROM users
+SELECT  users.user_id, users.username, users.email, users.created_at FROM users
 `;
 
 const createPostQ = `
-INSERT INTO posts (user_id, title, content)
+INSERT INTO Posts (user_id, title, content)
 VALUES ($1, $2, $3)
 RETURNING post_id, user_id, title, content`;
 
 const createCommentQ = `
-INSERT INTO comments (post_id, user_id, content)
+INSERT INTO Comments (post_id, user_id, content)
 VALUES ($1, $2, $3)
 RETURNING comment_id, post_id, user_id, content
 `;
@@ -33,10 +33,10 @@ SELECT
   c.comment_id,
   c.user_id AS comment_user_id,
   c.content AS comment_content
-FROM posts p
+FROM Posts p
 LEFT JOIN (
-  SELECT comment_id, post_id, user_id, content
-  FROM comments
+  SELECT comment_id, post_id, user_id, content, created_at
+  FROM Comments
 ) c ON p.post_id = c.post_id
 WHERE p.user_id = $1;
 `;

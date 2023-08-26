@@ -22,25 +22,28 @@ async function createTables() {
 
     // Creates Tables
     const createTablesQuery = `
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE IF NOT EXISTS Users (
           user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
           password VARCHAR(255) NOT NULL,
           username VARCHAR(255) NOT NULL,
-          email VARCHAR(255) NOT NULL UNIQUE
+          email VARCHAR(255) NOT NULL UNIQUE,
+          created_at TIMESTAMPTZ DEFAULT NOW()
         );
 
-        CREATE TABLE IF NOT EXISTS posts (
+        CREATE TABLE IF NOT EXISTS Posts (
           post_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-          user_id UUID REFERENCES users(user_id),
+          user_id UUID REFERENCES Users(user_id),
           title VARCHAR(255) NOT NULL,
-          content TEXT
+          content TEXT,
+          created_at TIMESTAMPTZ DEFAULT NOW()
         );
 
-        CREATE TABLE IF NOT EXISTS comments (
+        CREATE TABLE IF NOT EXISTS Comments (
           comment_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-          post_id UUID REFERENCES posts(post_id),
-          user_id UUID REFERENCES users(user_id),
-          content TEXT
+          post_id UUID REFERENCES Posts(post_id),
+          user_id UUID REFERENCES Users(user_id),
+          content TEXT,
+          created_at TIMESTAMPTZ DEFAULT NOW()
         );
       `;
     await db.query(createTablesQuery);
@@ -68,6 +71,8 @@ const checkDBConnection = () => {
     });
 };
 
-checkDBConnection();
+if (process.env.NODE_ENV !== 'test') {
+  checkDBConnection();
+}
 
 export default db;

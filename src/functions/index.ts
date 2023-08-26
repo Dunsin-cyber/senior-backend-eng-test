@@ -18,17 +18,20 @@ type PostT = {
   title: string;
   content: string;
   comments: CommentType[];
+  created_at: string;
 };
 
 type CommentType = {
   comment_id: string;
   content: string;
+  created_at: string;
 };
 
 export type UserReturnType = {
   user_id: string;
   password?: string;
   username: string;
+  created_at: string;
   email: string;
   posts?: PostT[];
 };
@@ -48,6 +51,7 @@ export const handleGetAUser = async (
       user_id: user.user_id,
       username: user.username,
       email: user.email,
+      created_at: user.created_at,
       password: user.password,
       posts: [],
     };
@@ -60,11 +64,13 @@ export const handleGetAUser = async (
           title: row.post_title,
           content: row.post_content,
           comments: [],
+          created_at: row.created_at,
         };
         if (row.comment_id) {
           post.comments.push({
             comment_id: row.comment_id,
             content: row.comment_content,
+            created_at: row.created_at,
           });
         }
         userWithPostsAndComments.posts?.push(post);
@@ -137,6 +143,7 @@ export const handleGetAllUsers = async () => {
         user_id: res.user_id,
         username: res.username,
         email: res.email,
+        created_at: res.created_at,
       });
     });
   }
