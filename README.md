@@ -21,6 +21,11 @@ DB_NAME=your_db_name`
 
 Open your browser and navigate to the URL and port you specified in the Docker Compose file.
 
+## DOCS
+
+- [POSTMAN DOCS](https://documenter.getpostman.com/view/12099147/2s9Y5YS2gb)
+- [LIVE URL](http://74.235.81.53/)
+
 ## Contributing
 
 If you'd like to contribute to this project, feel free to fork the repository and submit a pull request.
