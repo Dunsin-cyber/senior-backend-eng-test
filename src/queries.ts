@@ -1,5 +1,5 @@
 const getUserQuery = `
-SELECT u.user_id, u.password, u.username, u.email,
+SELECT u.user_id, u.password, u.username, u.email, u.created_at,
        p.post_id, p.title as post_title, p.content as post_content,
        c.comment_id, c.content as comment_content, c.created_at as comment_created_at
 FROM Users u
