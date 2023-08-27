@@ -12,7 +12,7 @@ const db = new Pool({
   host:
     process.env.NODE_ENV === 'test'
       ? 'localhost'
-      : 'senior-backend-eng-test-db-1', //VM uses underscore
+      : 'senior-backend-eng-test_db_1', //VM uses underscore
   database: POSTGRES_DB,
   password: POSTGRES_PASSWORD,
   port: 5432, // Default PostglsreSQL port
