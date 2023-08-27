@@ -15,10 +15,8 @@ const mockResult = {
   ],
 };
 
-describe('handleCreateUser', () => {
+describe('POST / users', () => {
   it('should return the created user', async () => {
-    // db.query = jest.fn().mockResolvedValue(mockResult);
-
     const username = 'testuser';
     const email = 'test@examplr.com';
     const password = 'password';
@@ -35,27 +33,30 @@ describe('handleCreateUser', () => {
   });
 });
 
-// describe('handleGetAUser', () => {
-//   it('should return a user with posts and comments', async () => {
-//     // Mock db.query function
-//     db.query = jest.fn().mockResolvedValue(mockResult);
+describe('GET / users', () => {
+  it('should return a user', async () => {
+    const userId = null;
+    const email = 'test@examplr.com';
 
-//     const userId = 'd1d0d673-4607-4b23-b9ba-cf3a73852bee';
-//     const email = null;
+    // Call the function
+    const user = await handleGetAUser(userId, email);
 
-//     // Call the function
-//     const user = await handleGetAUser(userId, email);
+    // Assertions
+    expect(user).toBeDefined();
+    expect(user.user_id).toBeDefined();
+    expect(user.username).toEqual('testuser');
+    expect(user.email).toEqual('test@examplr.com');
+    expect(user.posts).toHaveLength(0);
+  });
 
-//     // Assertions
-//     expect(user).toBeDefined();
-//     expect(user.user_id).toEqual('d1d0d673-4607-4b23-b9ba-cf3a73852bee');
-//     expect(user.username).toEqual('testuser');
-//     expect(user.email).toEqual('test@example.com');
-//     expect(user.posts).toHaveLength(0);
-//   });
+  it('should return no user found', async () => {
+    const userId = null;
+    const user = await handleGetAUser(userId, 'wrong@email.com');
 
-//   //like no user found
-// });
+    expect(user).toHaveLength(0);
+    // toThrowError('No user found');
+  });
+});
 
 afterAll(async () => {
   await db.end(); // Close the database connection

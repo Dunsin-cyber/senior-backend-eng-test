@@ -71,6 +71,8 @@ export const handleGetAUser = async (
   }
 };
 
+// const getUserFnc = async (pos) => {};
+
 //TODO: email should be unique in the databse
 export const handleCreateUser = async (
   username: string,

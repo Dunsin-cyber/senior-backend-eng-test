@@ -24,19 +24,28 @@ const middleware = {
 
       const token = req.headers.authorization?.replace('Bearer ', '');
       if (!token) {
-        throw new AppError('Unauthorized', STATUS_CODE.UNAUTHORIZED);
+        return res.status(STATUS_CODE.UNAUTHORIZED).json({
+          success: false,
+          data: 'Unauthorized',
+        });
       }
 
       // const verify = jwt.verify(token, JWT_SECRET)
       jwt.verify(token, JWT_SECRET, async (err, payload) => {
         if (err) {
-          throw new AppError(err.message, STATUS_CODE.BAD_REQUEST);
+          return res.status(STATUS_CODE.UNAUTHORIZED).json({
+            success: false,
+            data: err.message,
+          });
         } else {
           const { id }: any = payload;
           const data = await handleGetAUser(id, null);
           console.log('data', data);
           if (!data) {
-            throw new AppError('user does not exist', STATUS_CODE.UNAUTHORIZED);
+            return res.status(STATUS_CODE.UNAUTHORIZED).json({
+              success: false,
+              data: 'user does not exist',
+            });
           } else {
             req.user = data;
             next();
