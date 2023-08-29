@@ -41,9 +41,7 @@ export const handleGetAUser = async (
 ) => {
   const result: any = await dbProvider.DBgetUser(userId, email);
 
-  if (result.rows.length === 0) {
-    throw new AppError('No user found', STATUS_CODE.UNAUTHORIZED);
-  } else {
+  if (result?.rows?.length > 0) {
     const user = result.rows[0];
     const userWithPostsAndComments: UserReturnType = {
       user_id: user.user_id,
@@ -58,6 +56,8 @@ export const handleGetAUser = async (
     // so what i will do is the first array, i will use it to pick the user,
     //then  ater on map throught the array to get the product
     return userWithPostsAndComments;
+  } else {
+    throw new AppError('No user found', STATUS_CODE.UNAUTHORIZED);
   }
 };
 

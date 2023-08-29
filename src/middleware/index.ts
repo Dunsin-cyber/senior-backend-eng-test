@@ -18,7 +18,10 @@ const middleware = {
       const { authorization } = req.headers;
       //authorization === Bearer ewefwegwrherhe
       if (!authorization) {
-        throw new AppError('you must be logged in', STATUS_CODE.FORBIDDEN);
+        return res.status(STATUS_CODE.UNAUTHORIZED).json({
+          success: false,
+          data: 'you must be logged in',
+        });
       }
 
       const token = req.headers.authorization?.replace('Bearer ', '');
