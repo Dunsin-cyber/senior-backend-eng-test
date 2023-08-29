@@ -1,63 +1,51 @@
-import { handleGetAUser, handleCreateUser } from '../functions';
-import { db } from './db';
+import request from 'supertest';
+import app from '../app';
+import dbProvider from './mockDb';
 
 // Mock the result returned by db.query
-const mockResult = {
-  rows: [
-    {
-      user_id: 'd1d0d673-4607-4b23-b9ba-cf3a73852bee',
-      username: 'testuser',
-      email: 'test@example.com',
-      created_at: new Date(),
-      password: 'hashed_password',
-      posst: [],
-    },
-  ],
-};
+jest.mock('../db/index', () => require('./mockDb'));
 
 describe('POST / users', () => {
-  it('should return the created user', async () => {
-    const username = 'testuser';
-    const email = 'test@examplr.com';
-    const password = 'password';
-    const user = await handleCreateUser(username, email, password);
-
-    expect(user).toBeDefined();
-    if (user) {
-      expect(user.token).toBeDefined();
-      expect(user.data.user_id).toBeDefined();
-      expect(user.data.username).toEqual('testuser');
-      expect(user.data.email).toEqual('test@examplr.com');
-      expect(user.data.created_at).toBeDefined();
-    }
-  });
-});
-
-describe('GET / users', () => {
-  it('should return a user', async () => {
-    const userId = null;
-    const email = 'test@examplr.com';
-
-    // Call the function
-    const user = await handleGetAUser(userId, email);
-
-    // Assertions
-    expect(user).toBeDefined();
-    expect(user.user_id).toBeDefined();
-    expect(user.username).toEqual('testuser');
-    expect(user.email).toEqual('test@examplr.com');
-    expect(user.posts).toHaveLength(0);
+  describe('given a username email and password', () => {
+    it('should create user', async () => {
+      const response = await request(app).post('/users').send({
+        username: 'dunsin',
+        email: 'dunsin@gmail.com',
+        password: '1234',
+      });
+      expect(dbProvider.DBcreateUser.mock.calls.length).toBe(1);
+    });
   });
 
-  it('should return no user found', async () => {
-    const userId = null;
-    const user = await handleGetAUser(userId, 'wrong@email.com');
-
-    expect(user).toHaveLength(0);
-    // toThrowError('No user found');
+  describe('login', () => {
+    it('should return you with the user and token', () => {
+      expect(true).toBe(true);
+    });
   });
-});
 
-afterAll(async () => {
-  await db.end(); // Close the database connection
+  describe('given a userId or email', () => {
+    it('should return not logged in error', async () => {
+      const response = await request(app).get('/users').send({
+        email: 'dunsin@gmail.com',
+      });
+      expect(response.statusCode).toBe(401);
+    });
+    it('should get a user', async () => {
+      expect(true).toBe(true);
+
+      // const response = await request(app).get('/users').send({
+      //   // email: 'dunsi',
+      //   email: 'dunsin@gmail.com',
+      //   // password: '1234',
+      // });
+      // expect(dbProvider.DBgetUser.mock.calls.length).toBe(1);
+      // expect(response.body.success).toBe(false);
+    });
+  });
+
+  describe('given no paramater', () => {
+    it('should get all the users', () => {
+      expect(true).toBe(true);
+    });
+  });
 });

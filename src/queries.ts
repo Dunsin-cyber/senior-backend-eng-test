@@ -10,6 +10,7 @@ WHERE u.user_id = $1 OR u.email = $2;
 const createUserQ = `
 INSERT INTO Users (user_id, password, username, email)
 VALUES ($1, $2, $3, $4);
+RETURNING user_id, password, username,email, created_at
 `;
 
 const getAllUsersQ = `
