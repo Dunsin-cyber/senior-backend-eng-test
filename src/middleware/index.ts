@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import db from '../db';
 import { JWT_SECRET, STATUS_CODE } from '../constants/index';
 import { AppError, handleError } from './error';
 import { handleGetAUser } from '../functions';
@@ -40,7 +39,7 @@ const middleware = {
         } else {
           const { id }: any = payload;
           const data = await handleGetAUser(id, null);
-          console.log('data', data);
+          // console.log('data', data);
           if (!data) {
             return res.status(STATUS_CODE.UNAUTHORIZED).json({
               success: false,
@@ -53,7 +52,6 @@ const middleware = {
         }
       });
     } catch (err) {
-      console.log('got here');
       throw new AppError(err as string, STATUS_CODE.UNAUTHORIZED);
     }
   },

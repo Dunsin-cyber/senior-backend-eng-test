@@ -8,7 +8,7 @@ export class AppError extends Error {
   isOperational: boolean;
 
   constructor(message: string, err: any) {
-    console.log(message);
+    // console.log(message);
     super(message);
     this.statusCode = err;
     this.isOperational = true;

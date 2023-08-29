@@ -1,19 +1,9 @@
-import db from '../db';
-import {
-  getUserQuery,
-  createUserQ,
-  getAllUsersQ,
-  createPostQ,
-  getUsersPostWithComment,
-  getAPostQ,
-  getPostComments,
-  optimizer,
-} from '../queries';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { SALT_ROUND, STATUS_CODE, JWT_SECRET } from '../constants/index';
 import { AppError } from '../middleware/error';
+import dbProvider from '../db/dbProvider';
 
 type PostT = {
   post_id: string;
@@ -49,7 +39,7 @@ export const handleGetAUser = async (
   userId: string | null,
   email: string | null
 ) => {
-  const result = await db.query(getUserQuery, [userId, email]);
+  const result: any = await dbProvider.DBgetUser(userId, email);
 
   if (result.rows.length === 0) {
     throw new AppError('No user found', STATUS_CODE.UNAUTHORIZED);
@@ -82,9 +72,9 @@ export const handleCreateUser = async (
   const userId = uuidv4();
 
   const hashPassword = await bcrypt.hash(password, SALT_ROUND);
-  await db.query(createUserQ, [userId, hashPassword, username, email]);
+  await dbProvider.DBcreateUser(userId, hashPassword, username, email);
 
-  //Get the just created user
+  //Getconst the just created user
   const data = await handleGetAUser(userId, null);
   if (data) {
     const { password, ...data_ } = data;
@@ -126,18 +116,20 @@ export const handleLogIn = async (email: string, password: string) => {
 
 //handle case of no users
 export const handleGetAllUsers = async () => {
-  const result = await db.query(getAllUsersQ);
+  const result: any = await dbProvider.DBgetAllUsers();
   const users: UserReturnType[] = [];
   if (result.rows) {
     const temp = result.rows;
-    temp.forEach((res) => {
-      users.push({
-        user_id: res.user_id,
-        username: res.username,
-        email: res.email,
-        created_at: res.created_at,
-      });
-    });
+    temp.forEach(
+      (res: { user_id: any; username: any; email: any; created_at: any }) => {
+        users.push({
+          user_id: res.user_id,
+          username: res.username,
+          email: res.email,
+          created_at: res.created_at,
+        });
+      }
+    );
   }
 
   return users;
@@ -154,27 +146,27 @@ export const handleCreatePost = async (
   user_id: string
 ) => {
   await handleGetAUser(user_id, null);
-  const create = await db.query(createPostQ, [user_id, title, content]);
+  const create: any = await dbProvider.DBcreatePost(user_id, title, content);
   return create.rows;
 };
 
 export const handleGetPosts = async (user_id: string) => {
   await handleGetAUser(user_id, null);
-  const posts = await db.query(getUsersPostWithComment, [user_id]);
+  const posts: any = await dbProvider.DBgetPosts(user_id);
 
   const getAll = async () => {
-    return Promise.all(posts.rows.map((c) => handleGetAPost(c.post_id)));
+    return Promise.all(posts.rows.map((c: any) => handleGetAPost(c.post_id)));
   };
 
   return getAll();
 };
 
 export const handleGetAPost = async (post_id: string) => {
-  const post = await db.query(getAPostQ, [post_id]);
+  const post: any = await dbProvider.DBgetAPost(post_id);
   if (post.rows.length === 0) {
     throw new AppError('post does not exist', STATUS_CODE.BAD_REQUEST);
   } else {
-    const comments = await db.query(getPostComments, [post_id]);
+    const comments: any = await dbProvider.DBgetPostComments(post_id);
 
     const postWithComments: PostReturnT = {
       post: post.rows[0],
@@ -185,7 +177,7 @@ export const handleGetAPost = async (post_id: string) => {
 };
 
 export const handleOptimize = async () => {
-  const res = await db.query(optimizer);
+  const res: any = await dbProvider.DBoptimize();
 
   return res.rows;
 };
